@@ -101,10 +101,6 @@ class Service
     attributes['name']
   end
 
-  def inner_ports
-    @inner_ports ||= attributes['container_ports'].map {|p| p['inner_port']}
-  end
-
   def container_ips
     @container_ips ||= containers.map {|c| c.ip if running? }.sort
   end
@@ -112,12 +108,7 @@ class Service
   def include?(mode, mode_options = {})
     @mode, @mode_options = mode, mode_options
     reload!
-    proxy? && running? && containers?
-  end
-
-  def proxy?
-    proxy_port = attributes['container_envvars'].find {|e| e['key'] == 'PROXY_PORT' }['value']
-    inner_ports.include? proxy_port
+    running? && containers?
   end
 
   def host
