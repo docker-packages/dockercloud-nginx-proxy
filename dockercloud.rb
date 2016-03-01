@@ -68,7 +68,7 @@ class Container
   end
 
   def port
-    attributes['container_ports'].find {|p| p['inner_port'] == 'PROXY_PORT'}['inner_port'] || 80
+    attributes['container_envvars'].find {|e| e['key'] == 'PROXY_PORT' }['value']
   end
 
   def host
@@ -101,8 +101,8 @@ class Service
     attributes['name']
   end
 
-  def port_types
-    @port_types ||= attributes['container_ports'].map {|p| p['port_name']}
+  def inner_ports
+    @inner_ports ||= attributes['container_ports'].map {|p| p['inner_port']}
   end
 
   def container_ips
@@ -112,11 +112,12 @@ class Service
   def include?(mode, mode_options = {})
     @mode, @mode_options = mode, mode_options
     reload!
-    http? && running? && containers?
+    proxy? && running? && containers?
   end
 
-  def http?
-    (port_types & ['http', 'https']).count > 0
+  def proxy?
+    proxy_port = attributes['container_envvars'].find {|e| e['key'] == 'PROXY_PORT' }['value']
+    inner_ports.include? proxy_port
   end
 
   def host
