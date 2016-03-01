@@ -67,6 +67,10 @@ class Container
     attributes['private_ip']
   end
 
+  def port
+    attributes['container_ports'].find {|p| p['inner_port'] == 'PROXY_PORT'}['inner_port'] || 80
+  end
+
   def host
     attributes['container_envvars'].find {|e| e['key'] == 'VIRTUAL_HOST' }['value']
   end
