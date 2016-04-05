@@ -163,6 +163,7 @@ end
 class HttpServices
 
   def self.reload!
+    # TODO: Nginx is reloaded with -s so why we are having downtimes?
     LOGGER.info 'Reloding Nginx...'
     EventMachine.system("nginx -s reload")
   end
