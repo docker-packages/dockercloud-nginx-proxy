@@ -1,5 +1,5 @@
-FROM nginx:latest
-MAINTAINER Ferron Hanse ferronrsmith@gmail.com
+FROM nginx:1.10.0
+MAINTAINER Richard Adams richard@madwire.co.uk
 
 # Install wget and install/updates certificates
 RUN apt-get update \
